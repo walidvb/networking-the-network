@@ -31,7 +31,8 @@ class App extends Component {
   }
   closeSocket(){
     this.send({ id: this.state.id, closed: true });
-    bluetoothSocket.close()
+    // do not close as it crashes the server
+    // bluetoothSocket.close();
   }
   handleVisibilityStatus(){
     // Adapted slightly from Sam Dutton
