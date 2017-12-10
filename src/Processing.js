@@ -15,9 +15,7 @@ export default class Processing extends Component {
     }
     componentWillReceiveProps(props){
         this.setState({
-            time: props.messages.time,
-            clientsCount: props.messages.clientsCount,
-
+            ...props.messages,
         })
     }
     render() {
