@@ -12,6 +12,7 @@ let bluetoothSocket;
 bluetoothSocket = new WebSocket(`ws://${url}:8025/ws`);
 
 let msgCount = 0;
+const id = parseInt(Math.random()*10000000);
 class App extends Component {
   constructor(){
     super();
@@ -20,6 +21,7 @@ class App extends Component {
       closed: false,
       ws: {},
       id: undefined,
+      running: true,
     };
     this.initWebSocket();
     this.initWebSocket = this.initWebSocket.bind(this);
@@ -67,7 +69,6 @@ class App extends Component {
     // Add a listener that constantly changes the title
     document.addEventListener(visibilityChange, () => {
       var hidden = document[state] == 'hidden';
-      console.log(hidden, document[state]);
       if(hidden){
         this.closeSocket();
       } else {
@@ -87,29 +88,23 @@ class App extends Component {
   componentWillUnmount(){
     this.closeSocket();
   }
+  handleWebsocketMessage({ data }){
+    const dataJson = JSON.parse(data);
+    msgCount++;
+    this.setState({
+      ws: dataJson,
+      clientsCount: dataJson.clientsCount,
+    });
+  }
   initWebSocket(){
-    console.log("initWebSocket: ", this.state.id);
-    bluetoothSocket.onopen = () => {
-      //this.send({ action: 'open', from: 'onopen' });
-      this.setState({ socketState: bluetoothSocket.readyState })
-    };
-
-    bluetoothSocket.onmessage = ({ data }) => {
-      const dataJson = JSON.parse(data);
-
-      if(!this.state.closed && this.state.id === undefined){
-        const id = dataJson.clientsCount + 1;
-        this.send({id, action: "open", from:"onmessage"});
-        this.setState({
-          id,
-        })
+    // this.setState({ socketState: bluetoothSocket.readyState })
+    bluetoothSocket.onopen = () => this.setState({ socketState: bluetoothSocket.readyState })
+    bluetoothSocket.onmessage = this.handleWebsocketMessage.bind(this);
+    setInterval(() => {
+      if(this.state.running){
+        this.send({action: "ping", id})
       }
-      msgCount++;
-      this.setState({
-        ws: dataJson,
-        clientsCount: dataJson.clientsCount,
-      });
-    }
+    }, 100);
   }
   renderColor() {
     const { time } = this.state.ws;
@@ -135,7 +130,7 @@ class App extends Component {
       )
     }
     return <div>
-      <div>{this.state.id}/{this.state.clientsCount};</div>
+      <div>{id}/{this.state.clientsCount};</div>
       {this.renderP5()}
     </div>
   }
