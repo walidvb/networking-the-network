@@ -9,12 +9,15 @@ const remoteHost = "192.168.2.151";
 const url = window.location.hostname === 'localhost' ? remoteHost : window.location.hostname;
 
 let bluetoothSocket;
+bluetoothSocket = new WebSocket(`ws://${url}:8025/ws`);
 
+let msgCount = 0;
 class App extends Component {
   constructor(){
     super();
     this.state = {
       initiated: false,
+      closed: false,
       ws: {},
       id: undefined,
     };
@@ -28,9 +31,13 @@ class App extends Component {
     else{
       bluetoothSocket.onopen = () => bluetoothSocket.send(JSON.stringify(msg));
     }
+    return true;
   }
   closeSocket(){
-    this.send({ id: this.state.id, closed: true });
+    this.setState({
+      closed: true,
+    });
+    this.send({ id: this.state.id, action: "close" });
     // do not close as it crashes the server
     // bluetoothSocket.close();
   }
@@ -64,7 +71,10 @@ class App extends Component {
       if(hidden){
         this.closeSocket();
       } else {
-        this.initWebSocket();
+        this.setState({
+          closed: false,
+          id: undefined,
+        }, this.initWebSocket)        
       }
       this.setState({
         running: !hidden,
@@ -78,18 +88,23 @@ class App extends Component {
     this.closeSocket();
   }
   initWebSocket(){
-    bluetoothSocket = new WebSocket(`ws://${url}:8025/ws`);
-    bluetoothSocket.onopen = () => this.setState({socketState: bluetoothSocket.readyState});
-    bluetoothSocket.onclose = () => this.setState({ socketState: bluetoothSocket.readyState });
+    console.log("initWebSocket: ", this.state.id);
+    bluetoothSocket.onopen = () => {
+      //this.send({ action: 'open', from: 'onopen' });
+      this.setState({ socketState: bluetoothSocket.readyState })
+    };
+
     bluetoothSocket.onmessage = ({ data }) => {
       const dataJson = JSON.parse(data);
-      if(this.state.id === undefined){
+
+      if(!this.state.closed && this.state.id === undefined){
         const id = dataJson.clientsCount + 1;
-        this.send({id});
+        this.send({id, action: "open", from:"onmessage"});
         this.setState({
-          id, 
+          id,
         })
       }
+      msgCount++;
       this.setState({
         ws: dataJson,
         clientsCount: dataJson.clientsCount,
@@ -115,7 +130,7 @@ class App extends Component {
     if (this.state.socketState !== bluetoothSocket.OPEN){
       return (
         <h1>
-          {this.state.socketState == bluetoothSocket.CLOSED ? "Closed" : "Connecting with love"}
+          {this.state.socketState == bluetoothSocket.CLOSED ? "Closed" : "Connecting with love"}: {this.state.socketState} { bluetoothSocket.readyState}
         </h1>
       )
     }

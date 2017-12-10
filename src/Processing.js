@@ -4,19 +4,25 @@ import P5Wrapper from 'react-p5-wrapper';
 const TWO_PI = Math.PI * 2
 
 export default class Processing extends Component {
+    constructor(){
+        super();
+        this.state = {
+
+        }
+    }
     setup(p){
         
     }
     sketch(p){
         let rotation = 0;
-
+        let sides = 0;
         p.setup = function () {
             p.createCanvas(window.innerWidth, window.innerHeight, p.WEBGL);
         };
 
         p.myCustomRedrawAccordingToNewPropsHandler = function (props) {
-            if (props.time) {
-                rotation = props.time * Math.PI / 180;
+            if (props.sides) {
+                sides = props.sides;
             }
         };
 
@@ -27,7 +33,7 @@ export default class Processing extends Component {
             p.rotateY(rotation);
             //console.log(rotation);
             // p.box(window.innerWidth, 10);
-            polygon(0, 0, 80, 6); 
+            polygon(0, 0, 80, sides); 
             p.pop();
         };
         
@@ -47,13 +53,15 @@ export default class Processing extends Component {
     componentWillReceiveProps(props){
         this.setState({
             time: props.messages.time,
+            clientsCount: props.messages.clientsCount+1,
+
         })
     }
     render() {
         return (
             <div>
                 <div>{this.props.time};</div>
-                <P5Wrapper sketch={this.sketch} time={this.props.time}>
+                <P5Wrapper sketch={this.sketch} time={this.state.time} sides={this.state.clientsCount}>
                     
                 </P5Wrapper>
             </div>
