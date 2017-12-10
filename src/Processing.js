@@ -23,6 +23,7 @@ export default class Processing extends Component {
         p.myCustomRedrawAccordingToNewPropsHandler = function (props) {
             if (props.sides) {
                 sides = props.sides;
+                rotation = props.time / 400;
             }
         };
 
@@ -30,8 +31,7 @@ export default class Processing extends Component {
             p.background(120);
             p.noStroke();
             p.push();
-            p.rotateY(rotation);
-            //console.log(rotation);
+            p.rotateX(rotation);
             // p.box(window.innerWidth, 10);
             polygon(0, 0, 80, sides); 
             p.pop();
