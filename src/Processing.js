@@ -39,6 +39,10 @@ export default class Processing extends Component {
                         <br />
                          <i>Look for the person</i> controlling the position of the displayed polygon while each viewer participates directly informing its shape.
                     </p>
+                    <p style={{fontSize: ".8rem"}}>
+                        <a target="_blank" href="https://github.com/walidvb/networking-the-network">Source code</a>
+
+                    </p>
                 </div>
             )
             return(
