@@ -27,7 +27,7 @@ class App extends Component {
     return <Processing />
   }
   render(){
-    return <div>
+    return <div className="App">
       <WebSocketWrapper>
         {this.renderP5()}
       </WebSocketWrapper>

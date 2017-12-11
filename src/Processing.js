@@ -56,12 +56,16 @@ export default class Processing extends Component {
             <div>
                 <div className="info-trigger" onClick={this.clickInfo}>i</div>
                 { this.renderInfo() }
-                #: {this.state.clientsCount}
-                <P5Wrapper rotation={this.state.sensor3} 
-                    sketch={sketches[0]} 
+                <P5Wrapper 
+                    sensor0={this.state.sensor0} 
+                    sensor1={this.state.sensor1} 
+                    sensor2={this.state.sensor2} 
+                    sensor3={this.state.sensor3} 
                     time={this.state.time} 
-                    sides={this.state.clientsCount}>
-                </P5Wrapper>
+                    sides={this.state.clientsCount}
+                    sketch={sketches[0]} 
+                />
+                    
             </div>
         )
     }
