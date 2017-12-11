@@ -5,3 +5,38 @@
   justify-content: center;
   align-items: center;
 }
+
+.info-container{
+  color: #111;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  z-index: 100;
+  animation: slideUp 1 .3s ease-in-out;
+  padding: 0 1rem;
+}
+
+.info-trigger{
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  background-color: black;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  z-index: 101;
+}
+
+@keyframes slideUp{
+  from{ transform: translateY(100vh)}
+  to{ transform: translateY(0vh)}
+}

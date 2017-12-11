@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-const remoteHost = "192.168.2.151";
+const remoteHost = "192.168.2.147";
 const url = window.location.hostname === 'localhost' ? remoteHost : window.location.hostname;
 
 let bluetoothSocket;
@@ -17,6 +17,7 @@ class WebSocketWrapper extends Component {
             ws: {},
             id: undefined,
             running: true,
+            socketState: bluetoothSocket.readyState,
         };
         this.initWebSocket();
         this.initWebSocket = this.initWebSocket.bind(this);
@@ -85,10 +86,12 @@ class WebSocketWrapper extends Component {
     }
     handleWebsocketMessage({ data }) {
         const dataJson = JSON.parse(data);
+        // console.log(dataJson);
         msgCount++;
         this.setState({
             ws: dataJson,
             clientsCount: dataJson.clientsCount,
+            socketState: bluetoothSocket.readyState,
         });
     }
     initWebSocket() {
@@ -102,16 +105,14 @@ class WebSocketWrapper extends Component {
         }, 100);
     }
     render() {
-        if (this.state.socketState !== bluetoothSocket.OPEN) {
+        if (this.state.socketState != bluetoothSocket.OPEN) {
             return (
                 <h1>
                     {this.state.socketState == bluetoothSocket.CLOSED ? "Closed" : "Connecting with love"}: {this.state.socketState} {bluetoothSocket.readyState}
                 </h1>
             )
         }
-        console.log({ ...this.state.ws });
         return <div>
-            <div>{id}/{this.state.clientsCount};</div>
             {React.cloneElement(this.props.children, { messages: this.state.ws })}
 
         </div>
