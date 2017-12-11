@@ -19,13 +19,46 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
-    <title>React App</title>
+    <title>CODES IN MOTION</title>
+    <style>
+      body{
+        font-family: sans-serif;
+        background: rgba(127, 127,127, 1);
+      }
+      .info-container{
+        color: #111;
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        flex-flow: column;
+        justify-content: center;
+        align-items: center;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 100;
+        animation: slideUp 1 .3s ease-in-out;
+        padding: 0 1rem;
+        mix-blend-mode: overlay;
+      }
+    </style>
   </head>
   <body>
     <noscript>
       You need to enable JavaScript to run this app.
     </noscript>
-    <div id="root"></div>
+    <div id="root">
+      <div class="info-container" onClick={this.clickInfo.bind(this)}>
+        <h1> CODES IN MOTION [Loading...] </h1>
+        <p>
+          The smart wearable developed by Aline Martinez allows to transform body movement into electrical signals.
+          <br /> The current piece is a collaboration with walidvb to demonstrate one of its many usage.
+          <br /> Look for the person controlling the position of the displayed polygon while each viewer participates directly in
+          forming its shape.
+        </p>
+      </div>
+        
+    </div>
     <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.

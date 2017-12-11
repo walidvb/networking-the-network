@@ -3,23 +3,26 @@ import P5Wrapper from 'react-p5-wrapper';
 
 import simplePolygon from './sketches/polygonSimple';
 import polygonMorph from './sketches/polygonMorph';
-
+const randomColor = require('randomcolor'); // import the script 
 
 const sketches = [simplePolygon, polygonMorph];
 export default class Processing extends Component {
     constructor(){
         super();
         this.state = {
-            displayInfo: false,
+            displayInfo: true,
+            color: randomColor({ format: 'hex' })
         }
         this.clickInfo = this.clickInfo.bind(this);
+        this.changeColor = this.changeColor.bind(this);
     }
     componentWillReceiveProps(props){
         this.setState({
             ...props.messages,
         })
     }
-    clickInfo(){
+    clickInfo(evt){
+        evt.stopPropagation();
         this.setState({
             displayInfo: !this.state.displayInfo,
         })
@@ -27,18 +30,19 @@ export default class Processing extends Component {
     renderInfo(){
         if(this.state.displayInfo){
             return (
-                <div className="info-container">
+                <div className="info-container" onClick={this.clickInfo.bind(this)}>
                     <h1> CODES IN MOTION </h1>
-                    <p>The smart wearable developed by Aline Martinez allows to transform body movement into electrical signals.
+                    <p>
+                        The smart wearable developed by Aline Martinez allows to transform body movement into electrical signals.
                         <br />
                         The current piece is a collaboration with walidvb to demonstrate one of its many usage. 
                         <br />
-                        Somebody around you is controlling the position of the displayed polygon, while each viewer participates directly in forming its shape.
+                         <i>Look for the person</i> controlling the position of the displayed polygon while each viewer participates directly informing its shape.
                     </p>
                 </div>
             )
             return(
-                <div className="info-container">
+                <div className="info-container" >
                     <h1> CODES IN MOTION </h1>
                     1. Join MitDir wifi 
                     <br/>
@@ -51,9 +55,14 @@ export default class Processing extends Component {
             )
         }
     }
+    changeColor(){
+        this.setState({
+            color: randomColor({format: 'hex'})
+        })
+    }
     render() {
         return (
-            <div>
+            <div onClick={this.changeColor}>
                 <div className="info-trigger" onClick={this.clickInfo}>i</div>
                 { this.renderInfo() }
                 <P5Wrapper 
@@ -61,6 +70,7 @@ export default class Processing extends Component {
                     sensor1={this.state.sensor1} 
                     sensor2={this.state.sensor2} 
                     sensor3={this.state.sensor3} 
+                    color={this.state.color}
                     time={this.state.time} 
                     sides={this.state.clientsCount}
                     sketch={sketches[0]} 

@@ -6,6 +6,7 @@ export default function(p){
     let sides = 0;
     let time = 0;
     let sensor0, sensor1, sensor2, sensor3;
+    let color = 'red';
     let start = new Date().getTime();
     p.setup = function () {
         console.log(window.innerWidth);
@@ -13,6 +14,9 @@ export default function(p){
     };
 
     p.myCustomRedrawAccordingToNewPropsHandler = function (props) {
+        if(props.color){
+            color = props.color;
+        }
         if (props.sides) {
             sides = props.sides;
         }
@@ -35,12 +39,12 @@ export default function(p){
     p.draw = function () {
         time = new Date().getTime() - start;
         const wobble = Math.sin(time/100) / 50 ;
-        p.background(120);
+        p.background(127);
         //p.text("p.frameRate", p.frameRate(), 5, 5);
         p.noStroke();
         p.push();
         if (sides == 1){
-            p.stroke('red');
+            p.stroke(color);
             console.log(translation, (translation + 10) * p.height * .4);
             const scale = p.map(sensor3, -40, 40, 10, window.innerWidth*.4);
             p.translate(wobble * 20, wobble * 30);
@@ -66,7 +70,7 @@ export default function(p){
     // };
     function polygon(x, y, radius, npoints) {
         var angle = TWO_PI / npoints;
-        p.stroke('red');
+        p.stroke(color);
         p.noFill()
         p.beginShape();
         for (var a = 0; a < TWO_PI; a += angle) {

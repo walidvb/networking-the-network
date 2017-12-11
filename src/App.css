@@ -16,6 +16,7 @@
   align-items: center;
   position: fixed;
   top: 0;
+  left: 0;
   z-index: 100;
   animation: slideUp 1 .3s ease-in-out;
   padding: 0 1rem;
@@ -35,7 +36,11 @@
   border-radius: 50%;
   z-index: 101;
 }
-
+.connection-status{
+  position: fixed;
+  bottom: 5px;
+  left: 0px;
+}
 @keyframes slideUp{
   from{ transform: translateY(100vh)}
   to{ transform: translateY(0vh)}

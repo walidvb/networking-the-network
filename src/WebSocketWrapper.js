@@ -106,10 +106,10 @@ class WebSocketWrapper extends Component {
     }
     render() {
         if (this.state.socketState != bluetoothSocket.OPEN) {
-            return (
-                <h1>
-                    {this.state.socketState == bluetoothSocket.CLOSED ? "Closed" : "Connecting with love"}: {this.state.socketState} {bluetoothSocket.readyState}
-                </h1>
+            (
+                <div className="connection-status">
+                    {this.state.socketState == bluetoothSocket.CLOSED ? "Closed" : "Connecting with love"}
+                </div>
             )
         }
         return <div>
